@@ -2,12 +2,7 @@
 $fa = 1;
 $fs = 0.4;
 
-//cdiff = 0.001;
-//dim_diff
-//    = 0.5;
-//tol = 0.51;
-
-//thk = 5;
+// NOTE: a suffix of `x` indicates that the variable is a "subscript" in `geometry.png`
 L0_temp = 15;
 L2_temp = 8;
 b = 4;
@@ -15,7 +10,7 @@ bx = [2, 4, 6, L2_temp - 4];
 hx = [2, 4, 2, 4, 4];
 h = hx[2];
 Lx = [L0_temp, L0_temp - (bx[0] + bx[1]), L2_temp];
-tol = 0.8; //0.4;
+tol = /*0.8;*/ 0.4;
 
 module snap_fit(){
     linear_extrude(b){
@@ -44,7 +39,7 @@ translate([30, 0, 0]){
             snap_fit();
 }
 
-spread_sz_x = 2.0 * (hx[1] + hx[2]) + (tol / 2.0);
+spread_sz_x = 2.0 * (hx[1] + hx[2]) + (tol /* / 2.0*/);
 
 module sf_hole_part(){
     linear_extrude(b){
