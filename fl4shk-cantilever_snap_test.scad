@@ -32,11 +32,14 @@ module snap_fit(){
 
 //translate([0, -(hx[1] + hx[2] + hx[3]), 0])
 
-translate([30, 0, 0]){
-    snap_fit();
-    translate([0, 0, b])
-        rotate([180])
-            snap_fit();
+translate([40, 0, 0]){
+    rotate([0, 0, -270])
+    union(){
+        snap_fit();
+        translate([0, 0, b])
+            rotate([180])
+                snap_fit();
+    }
 }
 
 spread_sz_x = 2.0 * (hx[1] + hx[2]) + (tol /* / 2.0*/);
@@ -63,4 +66,7 @@ module sf_hole_part(){
         }
     }
 }
+
+translate([20, 0, 0])
+rotate([0, 0, -180])
 sf_hole_part();
