@@ -2,36 +2,45 @@
 $fa = 1;
 $fs = 0.4;
 
+// units are mm
+
 // NOTE: a suffix of `x` indicates that the variable has a subscript in
 // `geometry.png`
-L0_temp = 15;
-L2_temp = 8;
+//L0_temp = 15;
+//L1_temp = 8;
 b = 4;
-bx = [2, 4, 6, L2_temp - 4];
+//b0_temp = 15 / 2.0;
+//b1_temp = 15;
+bx = [15.0 / 2.0, 6, 4];
 hx = [2, 4, 2, 4, 4];
 h = hx[2];
-Lx = [L0_temp, L0_temp - (bx[0] + bx[1]), L2_temp];
-tol = 0.8; //0.4;
+Lx = [2.0 * bx[0]];
+tol = /*1.0;*/ /*0.8;*/ /*0.4*/ 0.2;
+offs = 0.20 /*0.1*/;
 
 module snap_fit_half(){
     linear_extrude(b){
+        offset(r=-offs) offset(delta=offs)
         union(){
-            square([bx[2], hx[1] + hx[2] + hx[3]]);
-            translate([bx[2], hx[1], 0])
+            square([bx[1], hx[1] + hx[2] + hx[3]]);
+            translate([bx[1], hx[1], 0])
                 square([Lx[0], hx[2]]);
-            translate([Lx[1] + bx[0] + bx[2], hx[1] + hx[2], 0])
-                polygon([
+            translate([bx[1], hx[1] + hx[2]])
+                polygon(points=[
                     [0, 0],
-                    [bx[1], 0],
-                    [0, hx[0]],
+                    [bx[0], 0],
+                    [bx[0], hx[0]],
                 ]);
-            translate([Lx[1] + bx[2], hx[1] + hx[2], 0])
-                square([bx[0], hx[0]]);
+            translate([bx[0] + bx[1], hx[1] + hx[2]])
+                polygon(points=[
+                    [0, 0],
+                    [0, hx[0]],
+                    [bx[0], 0],
+                ]);
         }
     }
 }
 
-//translate([0, -(hx[1] + hx[2] + hx[3]), 0])
 
 module snap_fit(){
     union(){
@@ -42,67 +51,42 @@ module snap_fit(){
     }
 }
 translate([40, 0, 0]){
-    rotate([0, 0, -270])
+    rotate([0, 0, -90])
     snap_fit();
 }
 
 
-//spread_sz_x = 2.0 * (hx[1] + hx[2]) + (tol /* / 2.0*/);
-//module sf_hole_part(){
-//    linear_extrude(b){
-//        difference(){
-//            square([
-//                2.0 * (hx[0] + hx[4]) + spread_sz_x,
-//                Lx[1] + bx[0] + bx[1] + Lx[2], 
-//            ]);
-//            union(){
-//                translate([hx[4], Lx[1] - (tol / 2.0), 0])
-//                    square([
-//                        2.0 * hx[0] + spread_sz_x,
-//                        bx[0] + bx[1] + tol
-//                    ]);
-//                translate([hx[0] + hx[4], 0, 0])
-//                    square([
-//                        spread_sz_x,
-//                        Lx[1] + bx[0] + bx[1] + bx[3],
-//                    ]);
-//            }
-//        }
-//    }
-//}
+spread_sz_x_half = hx[1] + hx[2] + tol;
 
-spread_sz_x_half = hx[1] + hx[2] + tol / 2.0;
-module sf_hole_part_half(){
-    linear_extrude(b){
-        difference(){
-            square([
-                hx[0] + hx[4] + spread_sz_x_half,
-                Lx[1] + bx[0] + bx[2] + Lx[2],
-            ]);
-            union(){
-                translate([hx[0] + hx[4], 0, 0])
-                    square([
-                        spread_sz_x_half,
-                        Lx[1] + bx[0] + bx[1] + bx[3] + tol / 2.0
-                    ]);
-                translate([hx[4], Lx[1] - tol / 2.0, 0])
-                    square([
-                        hx[0],
-                        bx[0] + bx[1] + tol,
-                    ]);
-            }
+module sf_hole_part_half_noext(){
+    difference(){
+        square([
+            hx[0] + hx[4] + spread_sz_x_half,
+            Lx[0] + bx[2],
+        ]);
+        union(){
+            translate([hx[0] + hx[4], 0, 0])
+                square([spread_sz_x_half, Lx[0] + tol]);
+            translate([hx[0] + hx[4], 0])
+                polygon(points=[
+                    [0, 0],
+                    [-hx[0], bx[0] + tol],
+                    [0, Lx[0] + tol]
+                ]);
         }
     }
 }
 module sf_hole_part(){
-    union(){
-        sf_hole_part_half();
-        translate([2 * (hx[0] + hx[4] + spread_sz_x_half), 0, 0])
-            mirror([180, 0, 0])
-                sf_hole_part_half();
+    //offset(r=offs) offset(delta=-offs)
+    linear_extrude(b){
+        offset(r=-offs) offset(delta=offs)
+        union(){
+            sf_hole_part_half_noext();
+            translate([2 * (hx[0] + hx[4] + spread_sz_x_half), 0, 0])
+                mirror([180, 0, 0])
+                    sf_hole_part_half_noext();
+        }
     }
 }
 
-translate([20, 0, 0])
-    rotate([0, 0, -180])
-        sf_hole_part();
+sf_hole_part();
