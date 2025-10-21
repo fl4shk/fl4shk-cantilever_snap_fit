@@ -15,8 +15,8 @@ bx = [15.0 / 2.0, 6, 4];
 hx = [2, 4, 2, 4, 4];
 h = hx[2];
 Lx = [2.0 * bx[0]];
-tol = /*1.0;*/ /*0.8;*/ /*0.4*/ 0.2;
-offs = 0.20 /*0.1*/;
+tol = /*1.0;*/ /*0.8;*/ 0.4;
+offs = 0.20;
 
 module snap_fit_half(){
     linear_extrude(b){
@@ -56,7 +56,7 @@ translate([40, 0, 0]){
 }
 
 
-spread_sz_x_half = hx[1] + hx[2] + tol;
+spread_sz_x_half = hx[1] + hx[2] + tol / 2.0;
 
 module sf_hole_part_half_noext(){
     difference(){
@@ -70,7 +70,7 @@ module sf_hole_part_half_noext(){
             translate([hx[0] + hx[4], 0])
                 polygon(points=[
                     [0, 0],
-                    [-hx[0], bx[0] + tol],
+                    [-hx[0], bx[0] + tol / 2.0],
                     [0, Lx[0] + tol]
                 ]);
         }
