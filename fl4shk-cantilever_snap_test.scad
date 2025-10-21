@@ -22,7 +22,8 @@ module snap_fit_half(){
     linear_extrude(b){
         offset(r=-offs) offset(delta=offs)
         union(){
-            square([bx[1], hx[1] + hx[2] + hx[3]]);
+            translate([1.0, 0, 0]) // apply slight pressure to the snap
+                square([bx[1], hx[1] + hx[2] + hx[3]]);
             translate([bx[1], hx[1], 0])
                 square([Lx[0], hx[2]]);
             translate([bx[1], hx[1] + hx[2]])
