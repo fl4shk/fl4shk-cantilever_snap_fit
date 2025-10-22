@@ -65,6 +65,7 @@ my_h = [
     temp_sz_x,
     temp_sz_x + spread_sz_x_half,
     temp_sz_x - hx[0],
+    temp_sz_x - hx[4],
 ];
 
 my_b = [
@@ -106,6 +107,12 @@ module sf_hole_part_half_noext(){
                 square([hx[0], my_b[1]]);
             translate([my_h[0], 0, 0])
                 square([spread_sz_x_half, my_b[0] + my_b[1] + my_b[2]]);
+            //translate([my_h[2], 0, 0])
+            //    polygon(points=[
+            //        [0, my_b[0]],
+            //        [my_h[3], my_b[0]],
+            //        [my_h[3], 0],
+            //    ]);
         }
     }
 }
