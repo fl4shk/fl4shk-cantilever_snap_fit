@@ -70,6 +70,8 @@ my_h = [
 
 my_b = [
     bx[0] - bx[1] /*-*/ + beta,
+    bx[1] + beta,
+    bx[0] + beta,
     bx[0] + bx[1] + alpha,
     bx[3],
     Lx[1] - beta,
@@ -98,21 +100,26 @@ module sf_hole_part_half_noext(){
         //    translate([hx[0] + hx[4], 0, 0])
         //        square([spread_sz_x_half, bx[0] * 2 + bx[3]]);
         //}
+
         square([
             my_h[1],
-            my_b[0] + my_b[1] + my_b[3],
+            //my_b[0] + my_b[1] + my_b[4],
+            my_b[0] + my_b[3] + my_b[5]
         ]);
         union(){
+            translate([my_h[2], my_b[0] + my_b[1], 0])
+                square([hx[0], my_b[2]]);
             translate([my_h[2], my_b[0], 0])
-                square([hx[0], my_b[1]]);
+                polygon(points=[
+                    [0, my_b[1]],
+                    [my_h[3], my_b[1]],
+                    [my_h[3], 0],
+                ]);
             translate([my_h[0], 0, 0])
-                square([spread_sz_x_half, my_b[0] + my_b[1] + my_b[2]]);
-            //translate([my_h[2], 0, 0])
-            //    polygon(points=[
-            //        [0, my_b[0]],
-            //        [my_h[3], my_b[0]],
-            //        [my_h[3], 0],
-            //    ]);
+                square([
+                    spread_sz_x_half,
+                    my_b[0] + my_b[3] + my_b[4]
+                ]);
         }
     }
 }
