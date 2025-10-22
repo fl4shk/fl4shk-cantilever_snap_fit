@@ -68,7 +68,7 @@ my_h = [
 ];
 
 my_b = [
-    bx[0] - bx[1] /*- beta*/,
+    bx[0] - bx[1] /*-*/ + beta,
     bx[0] + bx[1] + alpha,
     bx[3],
     Lx[1] - beta,
