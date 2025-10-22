@@ -11,10 +11,10 @@ $fs = 0.4;
 b = 4;
 //b0_temp = 15 / 2.0;
 //b1_temp = 15;
-bx = [15.0 / 2.0, 3, 6, 4];
-hx = [2, 4, 2, 4, 4];
+bx = [15.0 / 2.0, 3, 6];
+hx = [2, 4, 2, 4, 4 * 2];
 h = hx[2];
-Lx = [2.0 * bx[0], bx[3] + 4];
+Lx = [2.0 * bx[0], 8];
 tol_temp = /*1.0;*/ /*0.8;*/ 0.4;
 alpha = tol_temp;
 beta = tol_temp / 2.0;
@@ -53,7 +53,7 @@ module snap_fit(){
                 snap_fit_half();
     }
 }
-translate([40, 0, 0]){
+translate([50, 0, 0]){
     rotate([0, 0, -90])
     snap_fit();
 }
@@ -73,7 +73,7 @@ my_b = [
     bx[1] + beta,
     bx[0] + beta,
     bx[0] + bx[1] + alpha,
-    bx[3],
+    //bx[3],
     Lx[1] - beta,
 ];
 
@@ -104,7 +104,7 @@ module sf_hole_part_half_noext(){
         square([
             my_h[1],
             //my_b[0] + my_b[1] + my_b[4],
-            my_b[0] + my_b[3] + my_b[5]
+            my_b[0] + my_b[3] + my_b[4]
         ]);
         union(){
             translate([my_h[2], my_b[0] + my_b[1], 0])
@@ -118,7 +118,7 @@ module sf_hole_part_half_noext(){
             translate([my_h[0], 0, 0])
                 square([
                     spread_sz_x_half,
-                    my_b[0] + my_b[3] + my_b[4]
+                    my_b[0] + my_b[3]
                 ]);
         }
     }
