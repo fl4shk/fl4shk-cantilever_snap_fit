@@ -11,30 +11,28 @@ $fs = 0.4;
 b = 4;
 //b0_temp = 15 / 2.0;
 //b1_temp = 15;
-bx = [15.0 / 2.0, 0.8, 6, 4];
+bx = [15.0 / 2.0, 6, 4];
 hx = [2, 4, 2, 4, 4];
 h = hx[2];
-Lx = [2.0 * bx[0], bx[3] + 4];
-tol_temp = /*1.0;*/ /*0.8;*/ 0.4;
-alpha = tol_temp;
-beta = tol_temp / 2.0;
-offs = /*0.20*/ 0.1;
+Lx = [2.0 * bx[0]];
+tol = /*1.0;*/ /*0.8;*/ 0.4;
+offs = 0.20;
 
 module snap_fit_half(){
     linear_extrude(b){
         offset(r=-offs) offset(delta=offs)
         union(){
-            //translate([0.5, 0, 0]) // apply slight pressure to the snap
-            square([bx[2], hx[1] + hx[2] + hx[3]]);
-            translate([bx[2], hx[1], 0])
+            translate([1.0, 0, 0]) // apply slight pressure to the snap
+                square([bx[1], hx[1] + hx[2] + hx[3]]);
+            translate([bx[1], hx[1], 0])
                 square([Lx[0], hx[2]]);
-            translate([bx[2] + bx[0] - bx[1], hx[1] + hx[2]])
+            translate([bx[1], hx[1] + hx[2]])
                 polygon(points=[
                     [0, 0],
-                    [bx[1], 0],
-                    [bx[1], hx[0]],
+                    [bx[0], 0],
+                    [bx[0], hx[0]],
                 ]);
-            translate([bx[0] + bx[2], hx[1] + hx[2]])
+            translate([bx[0] + bx[1], hx[1] + hx[2]])
                 polygon(points=[
                     [0, 0],
                     [0, hx[0]],
@@ -59,20 +57,23 @@ translate([40, 0, 0]){
 }
 
 
-spread_sz_x_half = hx[1] + hx[2] + beta /*+ tol / 2.0*/;
+spread_sz_x_half = hx[1] + hx[2] + tol / 2.0;
 
 module sf_hole_part_half_noext(){
     difference(){
         square([
             hx[0] + hx[4] + spread_sz_x_half,
-            //Lx[0] + bx[2],
-            bx[0] - beta + bx[0] + alpha + Lx[1] - beta
+            Lx[0] + bx[2],
         ]);
         union(){
-            translate([hx[4], bx[0] - beta, 0])
-                square([hx[0], bx[0] + alpha]);
             translate([hx[0] + hx[4], 0, 0])
-                square([spread_sz_x_half, bx[0] * 2 + bx[3] + beta]);
+                square([spread_sz_x_half, Lx[0] + tol]);
+            translate([hx[0] + hx[4], 0])
+                polygon(points=[
+                    [0, 0],
+                    [-hx[0], bx[0] + tol / 2.0],
+                    [0, Lx[0] + tol]
+                ]);
         }
     }
 }
